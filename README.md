@@ -4,14 +4,6 @@
 
 ## 概要
 
-**free-pomodoro** は作業時間と休憩時間を自由に設定できるポモドーロタイマーです。自分の作業スタイルに合わせて、効果的な時間管理をサポートします。
+**free-pomodoro** は作業時間と休憩時間を自由に設定できるポモドーロタイマーです。
 
-## インストール
-
-このプロジェクトをクローンしてローカルで実行する手順です。
-
-1. プロジェクトをクローン:
-
-   ```bash
-   git clone https://github.com/your-username/free-pomodoro.git
-   ```
+[free-pomodoro](https://firebasestorage.googleapis.com/v0/b/free-pomodoro.appspot.com/o/index.html?alt=media&token=5b2c14d9-d255-426c-a727-7dd9296bc130)

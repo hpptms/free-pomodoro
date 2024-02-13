@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
-import { Typography, TextField } from "@mui/material";
-import { useRecoilState } from "recoil";
-import { workTimerState, inputworkTimer } from "../recoil/atoms";
+import React, { useEffect, useState } from "react";
+import { Typography, TextField, Button } from "@mui/material";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { workTimerState, inputworkTimer, streakcount } from "../recoil/atoms";
+import kyuukeiAudioSrc from "../voice/kyuukei.mp3";
 
 interface TimersProps {
   parentAction: string;
@@ -10,6 +11,8 @@ interface TimersProps {
 export const WorkTimer: React.FC<TimersProps> = (props) => {
   const [currentWorkTimer, setWorkTimer] = useRecoilState(workTimerState);
   const [inputWorkTimer, setInputWorkTimer] = useRecoilState(inputworkTimer);
+  const streakCounter = useRecoilValue(streakcount);
+  const [audioPlayed, setAudioPlayed] = useState(false);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -24,6 +27,16 @@ export const WorkTimer: React.FC<TimersProps> = (props) => {
             isRunning: false,
           });
         } else {
+          if (
+            currentWorkTimer.minutes === 1 &&
+            currentWorkTimer.seconds === 0
+          ) {
+            if (!audioPlayed) {
+              new Audio(kyuukeiAudioSrc).play();
+              setAudioPlayed(true);
+            }
+          }
+
           if (currentWorkTimer.seconds === 0) {
             setWorkTimer((prev) => ({
               ...prev,
@@ -46,6 +59,8 @@ export const WorkTimer: React.FC<TimersProps> = (props) => {
     currentWorkTimer.minutes,
     currentWorkTimer.seconds,
     setWorkTimer,
+    streakCounter,
+    audioPlayed,
   ]);
 
   useEffect(() => {
@@ -67,6 +82,7 @@ export const WorkTimer: React.FC<TimersProps> = (props) => {
         seconds: currentWorkTimer.seconds,
         isRunning: true,
       });
+      setAudioPlayed(false);
     }
   };
 
@@ -76,6 +92,7 @@ export const WorkTimer: React.FC<TimersProps> = (props) => {
       seconds: 0,
       isRunning: false,
     });
+    setAudioPlayed(false);
   };
 
   const handleMinutesChange = (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Typography, TextField } from "@mui/material";
 import { useRecoilState, useSetRecoilState, useRecoilValue } from "recoil";
 import { timerStateSelector } from "../recoil/timerStateSelector";
@@ -7,7 +7,9 @@ import {
   workTimerState,
   inputworkTimer,
   inputbreakTimer,
+  streakcount,
 } from "../recoil/atoms";
+import kyuukeiowariAudioSrc from "../voice/kyuukeiowari.mp3";
 
 interface TimersProps {
   parentAction: string;
@@ -19,10 +21,14 @@ export const BreakTimer: React.FC<TimersProps> = (props) => {
   const setWorkTimer = useSetRecoilState(workTimerState);
   const inputWorkTimer = useRecoilValue(inputworkTimer);
   const [inputBreakTimer, setInputBreakTimer] = useRecoilState(inputbreakTimer);
+  const setStreakCounter = useSetRecoilState(streakcount);
+  const [audioPlayed, setAudioPlayed] = useState(false);
 
   const switchTimer = () => {
     setWorkTimer(inputWorkTimer);
     setBreakTimer(inputBreakTimer);
+    setStreakCounter((prevStreak) => ({ count: prevStreak.count + 1 }));
+    console.log(streakcount);
   };
 
   useEffect(() => {
@@ -44,6 +50,14 @@ export const BreakTimer: React.FC<TimersProps> = (props) => {
           //   BreakTimer終了後、WorkTimerを開始
           switchTimer();
         } else {
+          if (
+            currentBreakTimer.minutes === 0 &&
+            currentBreakTimer.seconds === 10 &&
+            !audioPlayed
+          ) {
+            new Audio(kyuukeiowariAudioSrc).play();
+            setAudioPlayed(true);
+          }
           if (currentBreakTimer.seconds === 0) {
             setBreakTimer((prev) => ({
               ...prev,
@@ -69,6 +83,7 @@ export const BreakTimer: React.FC<TimersProps> = (props) => {
     setWorkTimer,
     workTimer,
     switchTimer,
+    audioPlayed,
   ]);
 
   useEffect(() => {
@@ -90,6 +105,8 @@ export const BreakTimer: React.FC<TimersProps> = (props) => {
         seconds: currentBreakTimer.seconds,
         isRunning: true,
       });
+      setStreakCounter((prevStreak) => ({ count: 0 }));
+      setAudioPlayed(false);
     }
   };
 
@@ -99,6 +116,7 @@ export const BreakTimer: React.FC<TimersProps> = (props) => {
       seconds: 0,
       isRunning: false,
     });
+    setAudioPlayed(false);
   };
 
   const handleMinutesChange = (event: React.ChangeEvent<HTMLInputElement>) => {

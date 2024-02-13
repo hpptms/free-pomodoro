@@ -35,3 +35,17 @@ export const inputbreakTimer = atom({
       isRunning: false,
     },
 });
+
+export const streakcount = atom({
+  key: "streakcount",
+  default: {
+    count: 0,
+  },
+});
+
+export const darkmode = atom({
+  key: "darkmode",
+  default: {
+    darkmode: false,
+  },
+});

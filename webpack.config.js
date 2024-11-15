@@ -1,5 +1,6 @@
 const path = require('path');
-const { CleanWebpackPlugin }= require('clean-webpack-plugin')
+const { CleanWebpackPlugin }= require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   entry: './src/index.tsx',
@@ -16,6 +17,16 @@ module.exports = {
         use: "babel-loader",
         exclude: /node_modules/,
       },
+      {
+        test: /\.(mp3)$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+            outputPath: 'voice/',
+          },
+        },
+      },
     ],
   },
   resolve: {
@@ -27,4 +38,8 @@ module.exports = {
     },
   },
   mode: "production",
+  plugins: [
+    new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin(),
+  ],
 };
